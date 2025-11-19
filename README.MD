@@ -7,12 +7,11 @@
 - 漏洞类型: 任意文件上传漏洞
 - 攻击前提: 无
 
-## 高危 — 可被未授权利用的任意文件上传 / SSRF
+## 高危 — 可被未授权利用的任意文件上传
 
-1. 组件：UEditor 后端（文件上传 / 远程抓取）
+1. 组件：UEditor 后端（文件上传）
    - 问题与类型：
-     - 任意文件上传到 Web 根（getFilePath 使用 `$_SERVER['DOCUMENT_ROOT']` 拼接 `pathFormat`），config.json 的 `fileAllowFiles` 默认包含 `.html`、`.js`、`.css` 等可执行前端类型 → 可直接写入可被访问并执行的页面/脚本（持久 XSS / 挂马）。
-     - `saveRemote()` 的 Content-Type 判断有逻辑问题，且未对目标 URL 做内网/回环地址限制 → SSRF（可抓取内网资源）与类型绕过。
+     - 任意文件上传到 Web 根（getFilePath 使用 `$_SERVER['DOCUMENT_ROOT']` 拼接 `pathFormat`），config.json 的 `fileAllowFiles` 默认包含 `.html`、`.js`、`.css` 等可执行前端类型 → 可直接写入可被访问并执行的页面/脚本（持久 XSS）。
      - 控制器缺少鉴权/入口校验（controller.php 没有 `IN_DZZ` 等保护），可被外部直接访问。
    - 可利用性：高  可以直接向 `controller.php?action=uploadfile` 发起请求上传恶意 HTML/JS（见已给的 PoC），无需登录。
 
